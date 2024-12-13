@@ -9,9 +9,19 @@ import { CatchEverythingFilter } from './common/filter/catch-everything.filter';
 import { LoggingInterceptor } from './common/interceptor/logging.interceptor';
 import { TransformInterceptor } from './common/interceptor/transform.interceptor';
 import { ErrorsInterceptor } from './common/interceptor/errors.interceptor';
+import { ConfigModule } from '@nestjs/config';
+import { APP_MODE } from './common/config';
 
 @Module({
-  imports: [UsersModule, AccountsModule],
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: `env/.env.${APP_MODE}`,
+      isGlobal: true,
+      cache: true,
+    }),
+    UsersModule,
+    AccountsModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
