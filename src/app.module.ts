@@ -2,15 +2,15 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { AccountsModule } from './accounts/accounts.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { CatchEverythingFilter } from './common/filter/catch-everything.filter';
 import { LoggingInterceptor } from './common/interceptor/logging.interceptor';
 import { TransformInterceptor } from './common/interceptor/transform.interceptor';
 import { ErrorsInterceptor } from './common/interceptor/errors.interceptor';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_MODE } from './common/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -19,8 +19,21 @@ import { APP_MODE } from './common/config';
       isGlobal: true,
       cache: true,
     }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'mysql',
+        host: configService.get('HOST'),
+        port: +configService.get('PORT'),
+        username: configService.get('USERNAME'),
+        password: configService.get('PASSWORD'),
+        database: configService.get('DATABASE'),
+        synchronize: APP_MODE === 'DEVELOPMENT',
+        autoLoadEntities: true,
+      }),
+      inject: [ConfigService],
+    }),
     UsersModule,
-    AccountsModule,
   ],
   controllers: [AppController],
   providers: [
