@@ -4,7 +4,6 @@
   "description": "",
   "author": "TrumanGao",
   "license": "MIT",
-  "type": "module",
   "scripts": {
     "dev": "cross-env APP_MODE=DEVELOPMENT nest start --watch",
     "build": "nest build",
