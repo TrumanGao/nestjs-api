@@ -1,3 +1,4 @@
+// https://docs.nestjs.com/interceptors#aspect-interception
 import {
   Injectable,
   NestInterceptor,

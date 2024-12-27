@@ -1,3 +1,4 @@
+// https://docs.nestjs.com/interceptors#response-mapping
 import {
   Injectable,
   NestInterceptor,

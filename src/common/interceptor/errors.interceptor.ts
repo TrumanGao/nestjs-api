@@ -1,3 +1,4 @@
+// https://docs.nestjs.com/interceptors#more-operators
 import {
   Injectable,
   NestInterceptor,
