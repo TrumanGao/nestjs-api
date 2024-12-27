@@ -9,7 +9,7 @@ async function bootstrap() {
     abortOnError: false,
   });
   app.enableCors({
-    origin: ['http://localhost:3000'],
+    origin: ['http://localhost:8080'],
   });
 
   const config = new DocumentBuilder()
@@ -19,6 +19,7 @@ async function bootstrap() {
     .setVersion('0.0.1')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
+  // http://localhost:8080/nestjs-api/api/
   SwaggerModule.setup('nestjs-api/api', app, documentFactory);
 
   await app.listen(app.get(ConfigService).get('APP_PORT'));

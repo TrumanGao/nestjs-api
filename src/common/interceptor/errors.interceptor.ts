@@ -3,7 +3,6 @@ import {
   NestInterceptor,
   ExecutionContext,
   RequestTimeoutException,
-  BadGatewayException,
   CallHandler,
 } from '@nestjs/common';
 import { Observable, throwError, TimeoutError } from 'rxjs';
@@ -15,10 +14,11 @@ export class ErrorsInterceptor implements NestInterceptor {
     return next.handle().pipe(
       timeout(30000),
       catchError((err) => {
+        console.log('ErrorsInterceptor - err: ', err);
         if (err instanceof TimeoutError) {
           return throwError(() => new RequestTimeoutException());
         }
-        return throwError(() => new BadGatewayException());
+        return throwError(() => err);
       }),
     );
   }

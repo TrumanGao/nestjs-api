@@ -31,12 +31,9 @@ export class CatchEverythingFilter implements ExceptionFilter {
       path: httpAdapter.getRequestUrl(_request),
     };
 
-    console.log(
-      'AllExceptionsFilter - 捕获全部异常-请求头：',
-      _request.headers,
-    );
-    console.log('AllExceptionsFilter - 捕获全部异常-请求体：', _request.body);
-    console.log('AllExceptionsFilter - 捕获全部异常-响应对象：', responseBody);
+    console.log('CatchEverythingFilter - request.header: ', _request.header);
+    console.log('CatchEverythingFilter - request.body: ', _request.body);
+    console.log('CatchEverythingFilter - responseBody: ', responseBody);
 
     httpAdapter.reply(_response, responseBody, httpStatus);
   }
