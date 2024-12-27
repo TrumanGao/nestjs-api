@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { ApiBody } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { SignUpDto, SignInDto, UpdateUserDto } from './dto/users.dto';
 
@@ -14,17 +15,20 @@ import { SignUpDto, SignInDto, UpdateUserDto } from './dto/users.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post('signUp')
+  @ApiBody({ type: SignUpDto })
   signUp(@Body() signUpDto: SignUpDto) {
     return this.usersService.signUp(signUpDto);
   }
 
-  @Post()
+  @Post('signIn')
+  @ApiBody({ type: SignInDto })
   signIn(@Body() signInDto: SignInDto) {
     return this.usersService.signIn(signInDto);
   }
 
   @Patch(':id')
+  @ApiBody({ type: UpdateUserDto })
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }

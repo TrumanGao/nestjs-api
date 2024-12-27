@@ -4,26 +4,28 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
+  HttpStatus,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-export interface Response<T> {
-  data: T;
-}
-
 @Injectable()
 export class TransformInterceptor<T>
-  implements NestInterceptor<T, Response<T>>
+  implements NestInterceptor<T, ResponseBody<T>>
 {
   intercept(
     context: ExecutionContext,
     next: CallHandler,
-  ): Observable<Response<T>> {
+  ): Observable<ResponseBody<T>> {
     return next.handle().pipe(
       map((data) => {
         console.log('TransformInterceptor - data: ', data);
-        return { data };
+        return {
+          statusCode: HttpStatus.OK,
+          message: 'Request successful',
+          timestamp: new Date().toISOString(),
+          data,
+        };
       }),
     );
   }
