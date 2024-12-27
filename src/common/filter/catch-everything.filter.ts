@@ -31,7 +31,7 @@ export class CatchEverythingFilter implements ExceptionFilter {
       path: httpAdapter.getRequestUrl(_request),
     };
 
-    console.log('CatchEverythingFilter - request.header: ', _request.header);
+    console.log('CatchEverythingFilter - request.header: ', _request.headers);
     console.log('CatchEverythingFilter - request.body: ', _request.body);
     console.log('CatchEverythingFilter - responseBody: ', responseBody);
 
