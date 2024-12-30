@@ -1,23 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
 import { SignUpDto, SignInDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
-  ) {}
+  constructor(private usersService: UsersService) {}
 
   signUp(signUpDto: SignUpDto) {
-    console.log(signUpDto);
+    const users = this.usersService.findAll();
+    console.log('signUp: ', signUpDto, users);
     return 'This action adds a new user';
   }
 
   signIn(signInDto: SignInDto) {
-    console.log(signInDto);
+    const users = this.usersService.findAll();
+    console.log('signIn: ', signInDto, users);
     return 'This action returns a user';
   }
 }
