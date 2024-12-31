@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { UpdateUserDto } from './dto/users.dto';
+import { UpdateUserDto, FindOneByAccountDto } from './dto/users.dto';
 
 @Injectable()
 export class UsersService {
@@ -21,6 +21,10 @@ export class UsersService {
 
   findOne(id: number): Promise<User | null> {
     return this.usersRepository.findOneBy({ id });
+  }
+
+  findOneByAccount(findOneByAccountDto: FindOneByAccountDto) {
+    return this.usersRepository.findOneBy(findOneByAccountDto);
   }
 
   async remove(id: number) {
