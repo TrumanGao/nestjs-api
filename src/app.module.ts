@@ -9,7 +9,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
-import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE, APP_GUARD } from '@nestjs/core';
 import { CatchEverythingFilter } from './common/filter/catch-everything.filter';
 import { LoggingInterceptor } from './common/interceptor/logging.interceptor';
 import { TransformInterceptor } from './common/interceptor/transform.interceptor';
@@ -17,6 +17,7 @@ import { ErrorsInterceptor } from './common/interceptor/errors.interceptor';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_MODE } from './common/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -64,6 +65,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
     },
   ],
 })
