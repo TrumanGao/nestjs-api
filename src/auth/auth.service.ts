@@ -15,7 +15,7 @@ export class AuthService {
 
   signUp(signUpDto: SignUpDto) {
     const users = this.usersService.findAll();
-    console.log('signUp: ', signUpDto, users);
+    console.log('/auth.service.ts - signUp:', signUpDto, users);
     return 'This action adds a new user';
   }
 

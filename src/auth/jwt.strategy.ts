@@ -34,6 +34,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       email,
       phone,
     };
+    console.log('/jwt.strategy.ts - validate - user:', user);
     return user;
   }
 
@@ -47,7 +48,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     const access_token = await this.jwtService.signAsync(payload, {
       secret: getJwtSecret(this.configService),
     });
-    console.log('access_token:', access_token);
+    console.log('/jwt.strategy.ts - access_token:', access_token);
     return {
       access_token,
     };
