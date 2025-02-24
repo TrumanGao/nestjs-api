@@ -1,5 +1,5 @@
-import path from 'path';
-import { rimrafSync } from 'rimraf';
+const path = require('path');
+const { rimrafSync } = require('rimraf');
 
 const args = process.argv.slice(2);
 
