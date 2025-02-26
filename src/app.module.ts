@@ -68,6 +68,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
       useClass: ValidationPipe,
     },
     {
+      // https://docs.nestjs.com/recipes/passport#enable-authentication-globally
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },

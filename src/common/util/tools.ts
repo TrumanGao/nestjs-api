@@ -2,7 +2,11 @@ import type { ConfigService } from '@nestjs/config';
 
 export function getJwtSecret(
   configService: ConfigService,
-  strategyName: string = 'jwt',
+  propertyPath: string = 'JWT_SECRET',
 ) {
-  return Buffer.from(configService.get<string>(strategyName) || '', 'base64');
+  const secret = configService.get<string>(propertyPath);
+  if (!secret) {
+    throw new Error('JWT_SECRET is not defined.');
+  }
+  return Buffer.from(secret, 'base64');
 }
