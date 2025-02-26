@@ -1,3 +1,4 @@
+// https://docs.nestjs.com/security/authentication
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
@@ -12,6 +13,7 @@ import { getJwtSecret } from 'src/common/util/tools';
   imports: [
     UsersModule,
     PassportModule,
+    // https://github.com/nestjs/jwt/blob/master/README.md#async-options
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
