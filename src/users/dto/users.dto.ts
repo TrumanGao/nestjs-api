@@ -85,7 +85,7 @@ export class UpdateUserDto extends FindOneByAccountDto {
   isActive?: User['isActive'];
 }
 
-export class UpdatePasswordDto extends FindOneByAccountDto {
+export class UpdatePasswordDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()

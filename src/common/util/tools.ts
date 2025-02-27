@@ -1,6 +1,6 @@
 import type { ConfigService } from '@nestjs/config';
 
-export function getJwtSecret(
+export function generateJwtSecret(
   configService: ConfigService,
   propertyPath: string = 'JWT_SECRET',
 ) {

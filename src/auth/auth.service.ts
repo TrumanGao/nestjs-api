@@ -6,7 +6,7 @@ import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/entities/user.entity';
 import { SignUpDto, SignInDto } from './dto/auth.dto';
 import { CreateUserDto } from 'src/users/dto/users.dto';
-import { getJwtSecret } from 'src/common/util/tools';
+import { generateJwtSecret } from 'src/common/util/tools';
 
 @Injectable()
 export class AuthService {
@@ -18,36 +18,46 @@ export class AuthService {
 
   async signUp(signUpDto: SignUpDto) {
     const { password, ...findOneByAccountDta } = signUpDto;
+
+    if (!password) {
+      throw new UnauthorizedException('password is required');
+    }
+
     const user = await this.usersService.findOneByAccount(findOneByAccountDta);
     if (user) {
       throw new UnauthorizedException('user already exists');
     }
 
     const createUserDto: CreateUserDto = {
-      ...signUpDto,
-      nickname: `用户${signUpDto.username}`,
-      username: signUpDto.username,
+      ...findOneByAccountDta,
+      nickname: `用户${findOneByAccountDta.username}`,
       password: await hash(password, await genSalt()),
     };
     const newUser = await this.usersService.create(createUserDto);
-    return await this.createToken(newUser);
+    return await this.generateJwtToken(newUser);
   }
 
   async signIn(signInDto: SignInDto) {
-    const user = await this.usersService.findOneByAccount(signInDto);
+    const { password, ...findOneByAccountDta } = signInDto;
+
+    if (!password) {
+      throw new UnauthorizedException('password is required');
+    }
+
+    const user = await this.usersService.findOneByAccount(findOneByAccountDta);
     if (!user) {
       throw new UnauthorizedException('user not found');
     }
 
-    const isMatch = await compare(signInDto.password, user.password);
+    const isMatch = await compare(password, user.password);
     if (!isMatch) {
       throw new UnauthorizedException('wrong password');
     }
 
-    return await this.createToken(user);
+    return await this.generateJwtToken(user);
   }
 
-  async createToken(user: User) {
+  async generateJwtToken(user: User) {
     const { username, email, phone } = user;
     const payload: JwtPayload = {
       sub: user.id,
@@ -56,7 +66,7 @@ export class AuthService {
       phone,
     };
     const token = await this.jwtService.signAsync(payload, {
-      secret: getJwtSecret(this.configService),
+      secret: generateJwtSecret(this.configService),
     });
     return token;
   }

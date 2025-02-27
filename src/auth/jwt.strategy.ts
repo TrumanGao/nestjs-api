@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { APP_MODE } from 'src/common/config';
-import { getJwtSecret } from 'src/common/util/tools';
+import { generateJwtSecret } from 'src/common/util/tools';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -16,11 +16,11 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: getJwtSecret(configService),
+      secretOrKey: generateJwtSecret(configService),
     });
 
     if (APP_MODE === 'DEVELOPMENT') {
-      this.createToken();
+      this.generateJwtToken();
     }
   }
 
@@ -36,7 +36,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     return user;
   }
 
-  async createToken() {
+  async generateJwtToken() {
     const payload: JwtPayload = {
       sub: 0,
       username: 'TEST',
@@ -44,7 +44,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       phone: '1234567890',
     };
     const token = await this.jwtService.signAsync(payload, {
-      secret: getJwtSecret(this.configService),
+      secret: generateJwtSecret(this.configService),
     });
     console.log('/jwt.strategy.ts - token:', token);
     return token;
