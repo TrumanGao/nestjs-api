@@ -1,30 +1,41 @@
-import { IsNotEmpty, IsEmail, IsString, IsOptional } from 'class-validator';
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsString, IsEmail } from 'class-validator';
+import { User } from 'src/users/entities/user.entity';
+import { FindOneByAccountDto } from 'src/users/dto/users.dto';
 
 export class SignUpDto {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'account can be username, email or phone',
+  })
   @IsNotEmpty()
   @IsString()
-  userName: string;
+  username: User['username'];
 
   @ApiProperty({
     required: false,
+    description: 'account can be username, email or phone',
   })
   @IsOptional()
   @IsEmail()
-  email?: string;
+  email?: User['email'];
 
   @ApiProperty({
     required: false,
+    description: 'account can be username, email or phone',
   })
   @IsOptional()
   @IsString()
-  phone?: string;
+  phone?: User['phone'];
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  password: string;
+  password: User['password'];
 }
 
-export class SignInDto extends PartialType(SignUpDto) {}
+export class SignInDto extends FindOneByAccountDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  password: User['password'];
+}

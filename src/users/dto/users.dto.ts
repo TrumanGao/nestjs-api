@@ -1,46 +1,98 @@
-import { IsNotEmpty, IsEmail, IsString, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsNotEmpty,
+  IsEmail,
+  IsString,
+  IsOptional,
+  IsBoolean,
+} from 'class-validator';
+import { User } from '../entities/user.entity';
 
-export class UpdateUserDto {
+export class CreateUserDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  userName: string;
+  nickname: User['nickname'];
+
+  @ApiProperty({
+    description: 'account can be username, email or phone',
+  })
+  @IsNotEmpty()
+  @IsString()
+  username: User['username'];
 
   @ApiProperty({
     required: false,
+    description: 'account can be username, email or phone',
   })
   @IsOptional()
   @IsEmail()
-  email?: string;
+  email?: User['email'];
 
   @ApiProperty({
     required: false,
+    description: 'account can be username, email or phone',
   })
   @IsOptional()
   @IsString()
-  phone?: string;
+  phone?: User['phone'];
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  password: User['password'];
 }
 
 export class FindOneByAccountDto {
   @ApiProperty({
     required: false,
+    description: 'account can be username, email or phone',
   })
   @IsOptional()
   @IsString()
-  userName?: string;
+  username?: User['username'];
 
   @ApiProperty({
     required: false,
+    description: 'account can be username, email or phone',
   })
   @IsOptional()
   @IsEmail()
-  email?: string;
+  email?: User['email'];
 
+  @ApiProperty({
+    required: false,
+    description: 'account can be username, email or phone',
+  })
+  @IsOptional()
+  @IsString()
+  phone?: User['phone'];
+}
+
+export class UpdateUserDto extends FindOneByAccountDto {
   @ApiProperty({
     required: false,
   })
   @IsOptional()
   @IsString()
-  phone?: string;
+  nickname?: User['nickname'];
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isActive?: User['isActive'];
+}
+
+export class UpdatePasswordDto extends FindOneByAccountDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  oldPassword: User['password'];
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  newPassword: User['password'];
 }

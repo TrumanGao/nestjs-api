@@ -17,18 +17,32 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column({ unique: true })
-  userName: string;
+  @Column({ default: true })
+  isActive: boolean;
 
-  @Column({ unique: true })
-  email: string;
+  @Column()
+  nickname: string;
 
-  @Column({ unique: true })
-  phone: string;
+  @Column({
+    unique: true,
+    comment: 'account can be username, email or phone',
+  })
+  username: string;
+
+  @Column({
+    unique: true,
+    nullable: true,
+    comment: 'account can be username, email or phone',
+  })
+  email?: string;
+
+  @Column({
+    unique: true,
+    nullable: true,
+    comment: 'account can be username, email or phone',
+  })
+  phone?: string;
 
   @Column()
   password: string;
-
-  @Column({ default: true })
-  isActive: boolean;
 }

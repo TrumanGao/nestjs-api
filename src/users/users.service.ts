@@ -2,7 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { UpdateUserDto, FindOneByAccountDto } from './dto/users.dto';
+import {
+  CreateUserDto,
+  FindOneByAccountDto,
+  UpdateUserDto,
+  UpdatePasswordDto,
+} from './dto/users.dto';
 
 @Injectable()
 export class UsersService {
@@ -11,8 +16,20 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
+  create(createUserDto: CreateUserDto) {
+    return this.usersRepository.save(createUserDto);
+  }
+
+  softDelete(id: number) {
+    return this.usersRepository.softDelete(id);
+  }
+
   update(id: number, updateUserDto: UpdateUserDto) {
     return this.usersRepository.update(id, updateUserDto);
+  }
+
+  updatePassword(id: number, updatePasswordDto: UpdatePasswordDto) {
+    return this.usersRepository.update(id, updatePasswordDto);
   }
 
   findAll() {
@@ -25,9 +42,5 @@ export class UsersService {
 
   findOneByAccount(findOneByAccountDto: FindOneByAccountDto) {
     return this.usersRepository.findOneBy(findOneByAccountDto);
-  }
-
-  async remove(id: number) {
-    await this.usersRepository.delete(id);
   }
 }

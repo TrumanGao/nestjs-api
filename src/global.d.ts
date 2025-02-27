@@ -7,7 +7,7 @@ declare global {
   /**
    * User account information, all of these fields are unique and can be used to identify a user.
    */
-  type UserAccount = Pick<User, 'userName' | 'email' | 'phone'>;
+  type UserAccount = Pick<User, 'username' | 'email' | 'phone'>;
 
   interface JwtPayload extends UserAccount {
     sub: User['id'];
