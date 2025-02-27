@@ -17,7 +17,7 @@ import { generateJwtSecret } from 'src/common/util/tools';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        secret: generateJwtSecret(configService),
+        secret: generateJwtSecret({ configService }),
         signOptions: {
           expiresIn: '1d',
         },

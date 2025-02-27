@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { APP_MODE } from 'src/common/config';
-import { generateJwtSecret } from 'src/common/util/tools';
+import { generateJwtSecret, generateJwtToken } from 'src/common/util/tools';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -16,11 +16,22 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: generateJwtSecret(configService),
+      secretOrKey: generateJwtSecret({ configService }),
     });
 
     if (APP_MODE === 'DEVELOPMENT') {
-      this.generateJwtToken();
+      const user: JwtUser = {
+        id: 0,
+        username: 'TEST',
+        email: 'test@outlook.com',
+        phone: '1234567890',
+      };
+      generateJwtToken(user, {
+        configService: this.configService,
+        jwtService: this.jwtService,
+      }).then((token) => {
+        console.log('/jwt.strategy.ts - token:', token);
+      });
     }
   }
 
@@ -34,19 +45,5 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     };
     console.log('/jwt.strategy.ts - validate - user:', user);
     return user;
-  }
-
-  async generateJwtToken() {
-    const payload: JwtPayload = {
-      sub: 0,
-      username: 'TEST',
-      email: 'test@outlook.com',
-      phone: '1234567890',
-    };
-    const token = await this.jwtService.signAsync(payload, {
-      secret: generateJwtSecret(this.configService),
-    });
-    console.log('/jwt.strategy.ts - token:', token);
-    return token;
   }
 }

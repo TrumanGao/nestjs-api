@@ -29,7 +29,9 @@ export class UsersService {
   }
 
   updatePassword(id: number, updatePasswordDto: UpdatePasswordDto) {
-    return this.usersRepository.update(id, updatePasswordDto);
+    return this.usersRepository.update(id, {
+      password: updatePasswordDto.newPassword,
+    });
   }
 
   findAll() {

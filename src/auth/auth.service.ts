@@ -3,10 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { genSalt, hash, compare } from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
-import { User } from 'src/users/entities/user.entity';
 import { SignUpDto, SignInDto } from './dto/auth.dto';
 import { CreateUserDto } from 'src/users/dto/users.dto';
-import { generateJwtSecret } from 'src/common/util/tools';
+import { generateJwtToken } from 'src/common/util/tools';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +33,10 @@ export class AuthService {
       password: await hash(password, await genSalt()),
     };
     const newUser = await this.usersService.create(createUserDto);
-    return await this.generateJwtToken(newUser);
+    return await generateJwtToken(newUser, {
+      configService: this.configService,
+      jwtService: this.jwtService,
+    });
   }
 
   async signIn(signInDto: SignInDto) {
@@ -54,20 +56,9 @@ export class AuthService {
       throw new UnauthorizedException('wrong password');
     }
 
-    return await this.generateJwtToken(user);
-  }
-
-  async generateJwtToken(user: User) {
-    const { username, email, phone } = user;
-    const payload: JwtPayload = {
-      sub: user.id,
-      username,
-      email,
-      phone,
-    };
-    const token = await this.jwtService.signAsync(payload, {
-      secret: generateJwtSecret(this.configService),
+    return await generateJwtToken(user, {
+      configService: this.configService,
+      jwtService: this.jwtService,
     });
-    return token;
   }
 }
