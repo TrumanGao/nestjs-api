@@ -16,7 +16,7 @@ async function bootstrap() {
   // https://docs.nestjs.com/openapi/introduction
   const config = new DocumentBuilder()
     .addBearerAuth()
-    .setTitle('nestjs-api')
+    .setTitle('nestjs-mysql-typeorm-template')
     .setDescription('Nestjs API application template.')
     .setVersion('0.0.1')
     .build();
